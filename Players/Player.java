@@ -1,29 +1,51 @@
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
-class Player {
-    private String nome;
-    private int valore;
+public class Player {
 
-    public Player(String nome, int valore) {
-        this.nome = nome;
+    String name;
+    int valore;
+
+    public Player( String name) {
+        this.name = name;
+        valore = 0;
+    }
+
+    public void setValore (int valore){
         this.valore = valore;
     }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public int getValore() {
-        return valore;
-    }
-
-    public void salvaValoreSuFile() {
-        try (FileWriter writer = new FileWriter(nome + ".txt")) {
-            writer.write("Valore giocatore: " + valore);
-            System.out.println("Valore salvato in " + nome + ".txt");
-        } catch (IOException e) {
-            System.out.println("Errore durante il salvataggio del file: " + e.getMessage());
+    
+    public void load() {
+        File f = new File("data/" + name + ".dat");
+        try{
+            Scanner sc = new Scanner(f);
+            valore = sc.nextInt();
+            sc.close();
+        } catch(FileNotFoundException ex) {
+            ex.printStackTrace();
         }
+
     }
+    
+    public void save(){
+        File f = new File("data/" + name + ".dat");
+        PrintWriter pw;
+        try{
+            pw = new PrintWriter(f);
+            pw.print(valore);
+            pw.close();
+        }catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } 
+    }
+
+    @Override
+    public String toString() {
+        return "Player [name=" + name + ", valore=" + valore + "]";
+    }
+
+    
+
 }
